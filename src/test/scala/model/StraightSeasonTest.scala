@@ -11,16 +11,7 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
       Pairing("c", "d"), Pairing("c", "e"), Pairing("c", "f")
     )
 
-    val expectedScenarios = Set(
-      Scenario.from(List(("a", "d"), ("b", "e"), ("c", "f"))),
-      Scenario.from(List(("a", "d"), ("b", "f"), ("c", "e"))),
-      Scenario.from(List(("a", "e"), ("b", "d"), ("c", "f"))),
-      Scenario.from(List(("a", "e"), ("b", "f"), ("c", "d"))),
-      Scenario.from(List(("a", "f"), ("b", "d"), ("c", "e"))),
-      Scenario.from(List(("a", "f"), ("b", "e"), ("c", "d"))),
-    )
-
-    basicSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, expectedScenarios, expectedPossiblePairings, Set.empty, Set.empty)
+    basicSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, Set.empty, Set.empty)
     basicSeason.initialNumberOfProbabilities shouldBe 6
   }
 
@@ -31,8 +22,9 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
       (basicSeason.copy(noMatches =  information), false),
       (basicSeason.copy(perfectMatches =  information), false),
       (basicSeason.copy(noMatches =  information, perfectMatches = pairsFrom(("b", "d"))), false),
-      (basicSeason, true),
+      (basicSeason, true)
     )
+
     forAll(data) { case(season, expectedHasNoConfirmedInformation) =>
       season.hasNoConfirmedInformation shouldBe expectedHasNoConfirmedInformation
     }
