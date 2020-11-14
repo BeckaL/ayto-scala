@@ -7,7 +7,7 @@ class StraightSeasonTest extends FlatSpec with Matchers {
     val women = Set("a", "b", "c")
     val men = Set("d", "e", "f")
     val seasonName = "TestSeason"
-    val season = StraightSeason.from(seasonName, men, women)
+    val season = StraightSeason.from(seasonName, women, men)
 
     val expectedPossiblePairings = Set(
       Pairing("a", "d"), Pairing("a", "e"), Pairing("a", "f"),

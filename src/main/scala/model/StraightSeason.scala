@@ -1,20 +1,20 @@
 package model
 
-import Math.Factorial
+import factorialMaths.Factorial
 
 final case class StraightSeason(name: String,
                                 contestants: Contestants,
                                 weekNumber: Int,
                                 scenarios: Set[Scenario],
                                 possiblePairings: Set[Pairing],
-                                confirmedMatches: Set[Pairing],
-                                confirmedNoMatches: Set[Pairing]) {
+                                perfectMatches: Set[Pairing],
+                                noMatches: Set[Pairing]) {
 
-  val initialNumberOfProbabilities = Factorial.factorial(contestants.men.size)
+  val initialNumberOfProbabilities: Int = Factorial.factorial(contestants.men.size)
 }
 
 object StraightSeason {
-  def from(seasonName: String, men: Set[String], women: Set[String]): StraightSeason = {
+  def from(seasonName: String, women: Set[String], men: Set[String]): StraightSeason = {
     val possible_pairings = create_possible_pairings(women, men)
     val initial_scenarios = create_initial_scenarios(women, men)
     val contestants = Contestants(women, men)

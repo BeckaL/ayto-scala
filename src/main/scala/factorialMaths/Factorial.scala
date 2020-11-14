@@ -1,4 +1,4 @@
-package Math
+package factorialMaths
 
 object Factorial {
 

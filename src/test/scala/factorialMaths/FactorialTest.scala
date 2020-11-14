@@ -1,4 +1,4 @@
-package Math
+package factorialMaths
 
 import org.scalatest.prop.TableDrivenPropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
