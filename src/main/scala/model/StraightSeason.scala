@@ -21,6 +21,8 @@ object StraightSeason {
     StraightSeason(seasonName, contestants, 0, initial_scenarios, possible_pairings, Set.empty, Set.empty)
   }
 
+
+
   private def create_possible_pairings(women: Set[String], men: Set[String]): Set[Pairing] =
     for {
       woman <- women

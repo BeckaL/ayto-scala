@@ -1,12 +1,12 @@
 package calculator
 
-import model.{Pairing, ProbabilityForWoman, Scenario, StraightSeason}
+import model.{AytoFixtures, Pairing, ProbabilityForWoman, Scenario, StraightSeason}
 import org.scalatest.{FlatSpec, Matchers}
 
-class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers {
+class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers with AytoFixtures {
   "StraightSeasonProbabilityCalculator" should "calculate probabilities from existing confirmed matches and no matches" in {
-    val confirmedMatches = pairsFrom(Set(("a", "d"), ("b", "e"), ("c", "f")))
-    val confirmedNoMatches = pairsFrom(Set(("a", "e"), ("a", "f"), ("b", "d"), ("b", "f"), ("c", "d"), ("c", "e")))
+    val confirmedMatches = pairsFrom(("a", "d"), ("b", "e"), ("c", "f"))
+    val confirmedNoMatches = pairsFrom(("a", "e"), ("a", "f"), ("b", "d"), ("b", "f"), ("c", "d"), ("c", "e"))
     val season = basicSeason.copy(perfectMatches = confirmedMatches, noMatches = confirmedNoMatches)
 
     val expectedProbabilities = Set(
@@ -28,7 +28,7 @@ class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers {
 
 
   it should "calculate probabilities when there is a mix of confirmed information and non confirmed information" in {
-    val confirmedNoMatches = pairsFrom(Set(("a", "e")))
+    val confirmedNoMatches = pairsFrom(("a", "e"))
     val scenarios = Set(
       Scenario.from(List(("a", "d"),("b", "e"),("c", "f"))),
       Scenario.from(List(("a", "d"),("b", "f"),("c", "e"))),
@@ -44,10 +44,4 @@ class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers {
     val season = basicSeason.copy(scenarios = scenarios, noMatches = confirmedNoMatches, weekNumber = 1)
     StraightSeasonProbabilityCalculator.calculate(season) shouldBe expectedProbabilities
   }
-
-  private def pairsFrom(pairs: Set[(String, String)]) = pairs.map(p => Pairing(p._1, p._2))
-
-  private val basicSeason = StraightSeason.from("testSeason", women, men)
-  private lazy val women = Set("a", "b", "c")
-  private lazy val men = Set("d", "e", "f")
 }
