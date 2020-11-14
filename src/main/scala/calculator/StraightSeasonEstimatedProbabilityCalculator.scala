@@ -11,7 +11,7 @@ object StraightSeasonEstimatedProbabilityCalculator {
   }
 
   private def estimateProbabilityForPair(pair: Pairing, season: StraightSeason): Option[Double] = pair match {
-    case _ if season.perfectMatches.isEmpty && season.noMatches.isEmpty => Some(to2decimalPlaces(1.0 / season.contestants.women.size))
+    case _ if season.hasNoConfirmedInformation => Some(to2decimalPlaces(1.0 / season.contestants.women.size))
     case _ if season.perfectMatches.contains(pair) => Some(1.0)
     case _ if season.noMatches.contains(pair) => Some(0.0)
     case _ if season.perfectMatches.map(_.woman).contains(pair.woman) => Some(0.0)

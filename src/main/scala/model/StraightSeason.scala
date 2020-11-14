@@ -11,6 +11,8 @@ final case class StraightSeason(name: String,
                                 noMatches: Set[Pairing]) {
 
   val initialNumberOfProbabilities: Int = Factorial.factorial(contestants.men.size)
+
+  val hasNoConfirmedInformation = perfectMatches.isEmpty && noMatches.isEmpty
 }
 
 object StraightSeason {
