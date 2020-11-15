@@ -1,16 +1,14 @@
 package display
 
-import model.{CompleteProbabilityRow, CompleteProbabilityTable, IncompleteProbabilityRow, IncompleteProbabilityTable, ProbabilityResult, ProbabilityTable}
+import model.{CompleteProbabilityTable, IncompleteProbabilityTable, ProbabilityResult, ProbabilityTable}
 
 object ProbabilityFormatter {
-  def format[A](table: ProbabilityTable): String = {
-    table match {
+  def format[A](table: ProbabilityTable): String = table match {
       case CompleteProbabilityTable(rows) =>
         format(rows.map(_.asInstanceOf[ProbabilityResult[Double]]), padDigit)
       case IncompleteProbabilityTable(rows) =>
         format(rows.map(_.asInstanceOf[ProbabilityResult[Option[Double]]]), padOptionalDigit)
     }
-  }
 
   def format[A](probabilities: Set[ProbabilityResult[A]], digitPadder: (A, Int) => String): String = {
     val men = probabilities.head.probabilitiesForMen.keys.toList.sorted
