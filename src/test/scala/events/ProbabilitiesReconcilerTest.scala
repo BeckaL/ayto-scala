@@ -1,14 +1,14 @@
 package events
 
-import model.{AytoFixtures, CompleteProbabilityForWoman, ProbabilityResult, IncompleteProbabilityForWoman}
+import model.{AytoFixtures, CompleteProbabilityRow, ProbabilityResult, IncompleteProbabilityRow}
 import org.scalatest.{FlatSpec, Matchers}
 
 class ProbabilitiesReconcilerTest extends FlatSpec with Matchers with AytoFixtures {
   "Probabilities reconciler" should "get no matches and matches from probability table" in {
     val probabilities = Set(
-      CompleteProbabilityForWoman("a", Map("d" -> 1, "e" -> 0, "f" -> 0)),
-      CompleteProbabilityForWoman("b", Map("d" -> 0, "e" -> 0.5, "f" -> 0.5)),
-      CompleteProbabilityForWoman("c", Map("d" -> 0, "e" -> 0.5, "f" -> 0.5))
+      CompleteProbabilityRow("a", Map("d" -> 1, "e" -> 0, "f" -> 0)),
+      CompleteProbabilityRow("b", Map("d" -> 0, "e" -> 0.5, "f" -> 0.5)),
+      CompleteProbabilityRow("c", Map("d" -> 0, "e" -> 0.5, "f" -> 0.5))
     )
 
     val updatedSeason = ProbabilitiesReconciler.reconcileComplete(probabilities,threePairSeason)
@@ -19,9 +19,9 @@ class ProbabilitiesReconcilerTest extends FlatSpec with Matchers with AytoFixtur
 
   it should "get no matches and matches from uncertain probability table" in {
     val probabilities = Set(
-      IncompleteProbabilityForWoman("a", Map("d" -> Some(1.0), "e" -> Some(0.0), "f" -> Some(0.0))),
-      IncompleteProbabilityForWoman("b", Map("d" -> Some(0.0), "e" -> None, "f" -> None)),
-      IncompleteProbabilityForWoman("c", Map("d" -> Some(0.0), "e" -> None, "f" -> None))
+      IncompleteProbabilityRow("a", Map("d" -> Some(1.0), "e" -> Some(0.0), "f" -> Some(0.0))),
+      IncompleteProbabilityRow("b", Map("d" -> Some(0.0), "e" -> None, "f" -> None)),
+      IncompleteProbabilityRow("c", Map("d" -> Some(0.0), "e" -> None, "f" -> None))
     )
 
     val updatedSeason = ProbabilitiesReconciler.reconcileIncomplete(probabilities, threePairSeason)

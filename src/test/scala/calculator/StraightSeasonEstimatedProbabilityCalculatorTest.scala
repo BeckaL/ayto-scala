@@ -1,14 +1,14 @@
 package calculator
 
-import model.{AytoFixtures, Pairing, StraightSeason, IncompleteProbabilityForWoman}
+import model.{AytoFixtures, Pairing, StraightSeason, IncompleteProbabilityRow}
 import org.scalatest.{FlatSpec, Matchers}
 
 class StraightSeasonEstimatedProbabilityCalculatorTest extends FlatSpec with Matchers with AytoFixtures{
   "EstimatedProbabilityCalculator" should "estimate probabilities when there are no confirmed matches or no matches" in {
     val expectedProbabilities = Set(
-      IncompleteProbabilityForWoman("a", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))),
-      IncompleteProbabilityForWoman("b", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))),
-      IncompleteProbabilityForWoman("c", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))))
+      IncompleteProbabilityRow("a", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))),
+      IncompleteProbabilityRow("b", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))),
+      IncompleteProbabilityRow("c", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))))
 
     StraightSeasonEstimatedProbabilityCalculator.calculate(threePairSeason) shouldBe expectedProbabilities
   }
@@ -21,10 +21,10 @@ class StraightSeasonEstimatedProbabilityCalculatorTest extends FlatSpec with Mat
     val season = StraightSeason.from("TestSeason2", women, men).copy(noMatches = noMatches, perfectMatches = perfectMatches)
 
     val expectedProbabilities =  Set(
-      IncompleteProbabilityForWoman("a", Map("w" -> Some(0.00), "x" -> Some(1.00), "y" -> Some(0.00), "z" -> Some(0.00))),
-      IncompleteProbabilityForWoman("b", Map("w" -> None, "x" -> Some(0.00), "y" -> None, "z" -> None)),
-      IncompleteProbabilityForWoman("c", Map("w" -> None, "x" -> Some(0.00), "y" -> None, "z" -> None)),
-      IncompleteProbabilityForWoman("d", Map("w" -> Some(0.00), "x" -> Some(0.00), "y" -> None, "z" -> None)))
+      IncompleteProbabilityRow("a", Map("w" -> Some(0.00), "x" -> Some(1.00), "y" -> Some(0.00), "z" -> Some(0.00))),
+      IncompleteProbabilityRow("b", Map("w" -> None, "x" -> Some(0.00), "y" -> None, "z" -> None)),
+      IncompleteProbabilityRow("c", Map("w" -> None, "x" -> Some(0.00), "y" -> None, "z" -> None)),
+      IncompleteProbabilityRow("d", Map("w" -> Some(0.00), "x" -> Some(0.00), "y" -> None, "z" -> None)))
 
     StraightSeasonEstimatedProbabilityCalculator.calculate(season) shouldBe expectedProbabilities
   }
