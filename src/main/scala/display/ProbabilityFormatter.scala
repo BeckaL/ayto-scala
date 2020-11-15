@@ -1,9 +1,9 @@
 package display
 
-import model.ProbabilityForWoman
+import model.ComleteProbabilityForWoman
 
 object ProbabilityFormatter {
-  def format(probabilities: Set[ProbabilityForWoman]): String = {
+  def format(probabilities: Set[ComleteProbabilityForWoman]): String = {
     val men = probabilities.head.probabilitiesForMen.keys.toList.sorted
     val longestRowHeader = probabilities.map(_.woman).toList.map(_.length).max
     val topRow = " " * longestRowHeader + "  " + men.map(padColumnHeader).mkString

@@ -1,5 +1,7 @@
 package model
 
-case class ProbabilityForWoman(woman: String, probabilitiesForMen: Map[String, Double])
+trait ProbabilityResult
 
-case class UncertainProbabilityForWoman(woman: String, probabilitiesForMen: Map[String, Option[Double]])
+case class ComleteProbabilityForWoman(woman: String, probabilitiesForMen: Map[String, Double]) extends ProbabilityResult
+
+case class IncompleteProbabilityForWoman(woman: String, probabilitiesForMen: Map[String, Option[Double]]) extends ProbabilityResult

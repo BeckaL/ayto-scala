@@ -1,11 +1,11 @@
 package calculator
 
-import model.{Pairing, StraightSeason, UncertainProbabilityForWoman}
+import model.{Pairing, StraightSeason, IncompleteProbabilityForWoman}
 
 object StraightSeasonEstimatedProbabilityCalculator {
-  def calculate(season: StraightSeason): Set[UncertainProbabilityForWoman] = {
+  def calculate(season: StraightSeason): Set[IncompleteProbabilityForWoman] = {
     season.possiblePairings.groupBy(_.woman).map{ case woman -> pairings =>
-      UncertainProbabilityForWoman(woman, pairings.map(p => p.man -> estimateProbabilityForPair(p, season)).toMap)
+      IncompleteProbabilityForWoman(woman, pairings.map(p => p.man -> estimateProbabilityForPair(p, season)).toMap)
     }.toSet
 
   }
