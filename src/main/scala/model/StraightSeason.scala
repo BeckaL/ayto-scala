@@ -13,6 +13,13 @@ final case class StraightSeason(name: String,
   val initialNumberOfProbabilities: Int = Factorial.factorial(contestants.men.size)
 
   val hasNoConfirmedInformation = perfectMatches.isEmpty && noMatches.isEmpty
+  val isSolved = perfectMatches.size == contestants.women.size
+
+  def updateWithInfo(newPerfectMatches: Set[Pairing], newNoMatches: Set[Pairing]): StraightSeason =
+    this.copy(
+      perfectMatches = this.perfectMatches | newPerfectMatches,
+      noMatches = this.noMatches | newNoMatches
+    )
 }
 
 object StraightSeason {
@@ -22,8 +29,6 @@ object StraightSeason {
     val contestants = Contestants(women, men)
     StraightSeason(seasonName, contestants, 0, initial_scenarios, possible_pairings, Set.empty, Set.empty)
   }
-
-
 
   private def create_possible_pairings(women: Set[String], men: Set[String]): Set[Pairing] =
     for {

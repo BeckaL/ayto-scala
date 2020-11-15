@@ -10,14 +10,14 @@ object TruthBooth {
 
   private def noMatchTruthBooth(noMatch: Pairing, season: StraightSeason): StraightSeason = {
     val newScenarios = season.scenarios.filter(s => !s.contains(noMatch))
-    season.copy(scenarios = newScenarios, noMatches = season.noMatches + noMatch)
+    season.copy(scenarios = newScenarios).updateWithInfo(Set[Pairing](), Set(noMatch))
   }
 
   private def perfectMatchTruthBooth(perfectMatch: Pairing, season: StraightSeason): StraightSeason = {
     val newScenarios = season.scenarios.filter(s => s.contains(perfectMatch))
-    val newNoMatches: Set[Pairing] =  season.noMatches | season.possiblePairings
+    val newNoMatches: Set[Pairing] = season.possiblePairings
       .filter(p => p != perfectMatch && (p.woman == perfectMatch.woman || p.man == perfectMatch.man))
-    val newPerfectMatches = season.perfectMatches + perfectMatch
-    season.copy(scenarios = newScenarios, perfectMatches = newPerfectMatches, noMatches = newNoMatches)
+    val newPerfectMatches = Set(perfectMatch)
+    season.copy(scenarios = newScenarios).updateWithInfo(newPerfectMatches, newNoMatches)
   }
 }

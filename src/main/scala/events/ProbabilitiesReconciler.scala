@@ -15,7 +15,7 @@ object ProbabilitiesReconciler {
       pairsWhereProbabilityIs(probabilities, conditions._1),
       pairsWhereProbabilityIs(probabilities, conditions._2)
     )
-    season.copy(perfectMatches = season.perfectMatches | newMatches, noMatches = season.noMatches | newNoMatches)
+    season.updateWithInfo(newMatches, newNoMatches)
   }
 
   private def pairsWhereProbabilityIs[A](probabilities: Set[ProbabilityResult[A]], condition: A => Boolean) =

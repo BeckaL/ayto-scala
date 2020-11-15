@@ -28,7 +28,51 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
     forAll(data) { case(season, expectedHasNoConfirmedInformation) =>
       season.hasNoConfirmedInformation shouldBe expectedHasNoConfirmedInformation
     }
+  }
 
+  it should "be able to say whether or not it is solved" in {
+    val data = Table(
+      ("season", "expectedHasNoConfirmedInformation"),
+      (threePairSeason.copy(perfectMatches = Set()), false),
+      (threePairSeason.copy(perfectMatches = scenario2.pairs), true),
+      (threePairSeason.copy(perfectMatches = scenario2.pairs.take(2)), false)
+    )
+
+    forAll(data) { case(season, expectedIsSolved) =>
+      season.isSolved shouldBe expectedIsSolved
+    }
+  }
+
+  it should "add matches and no matches to existing information" in {
+    val noMatchInfo1 = pairsFrom(("a", "d"))
+    val noMatchInfo2 = pairsFrom(("a", "e"), ("b", "d"))
+    val noMatchInfo3 = pairsFrom(("a", "d"), ("a", "e"), ("b", "d"))
+
+    val perfectMatchInfo1 = pairsFrom(("a", "d"))
+    val perfectMatchInfo2 = pairsFrom(("b", "d"))
+    val perfectMatchInfo3 = pairsFrom(("a", "d"), ("b", "d"))
+
+    val emptyInfo = Set[Pairing]()
+
+    val data = Table(
+      ("season", "newInfo", "expectedInfo"),
+      (threePairSeason.copy(noMatches = emptyInfo), (emptyInfo, noMatchInfo1), (emptyInfo, noMatchInfo1)),
+      (threePairSeason.copy(noMatches = noMatchInfo1), (emptyInfo, noMatchInfo2), (emptyInfo, noMatchInfo3)),
+      (threePairSeason.copy(noMatches = noMatchInfo3), (emptyInfo, noMatchInfo3), (emptyInfo, noMatchInfo3)),
+      (threePairSeason.copy(perfectMatches = emptyInfo), (perfectMatchInfo1, emptyInfo), (perfectMatchInfo1, emptyInfo)),
+      (threePairSeason.copy(perfectMatches = perfectMatchInfo1), (perfectMatchInfo2, emptyInfo), (perfectMatchInfo3, emptyInfo)),
+      (threePairSeason.copy(perfectMatches = perfectMatchInfo3), (perfectMatchInfo3, emptyInfo), (perfectMatchInfo3, emptyInfo)),
+    )
+
+    forAll(data) { case(season, newInfo, expectedInfo) =>
+      val updatedSeason = season.updateWithInfo(newInfo._1, newInfo._2)
+      updatedSeason.name shouldBe season.name
+      updatedSeason.contestants shouldBe season.contestants
+      updatedSeason.possiblePairings shouldBe season.possiblePairings
+      updatedSeason.scenarios shouldBe season.scenarios
+      updatedSeason.perfectMatches shouldBe expectedInfo._1
+      updatedSeason.noMatches shouldBe expectedInfo._2
+    }
   }
 }
 
