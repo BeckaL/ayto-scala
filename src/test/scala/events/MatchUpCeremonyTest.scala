@@ -1,6 +1,6 @@
 package events
 
-import model.{AytoFixtures, Pairing, Scenario}
+import model.{AytoFixtures, ConfirmedInfo, Pairing, Scenario}
 import org.scalatest.{FlatSpec, Matchers}
 
 class MatchUpCeremonyTest extends FlatSpec with Matchers with AytoFixtures {
@@ -15,9 +15,9 @@ class MatchUpCeremonyTest extends FlatSpec with Matchers with AytoFixtures {
     val expectedNoMatches = pairs
 
 
-    newSeason.perfectMatches shouldBe Set.empty
+    newSeason.confirmedInfo.perfectMatches shouldBe Set.empty
     newSeason.scenarios shouldBe expectedScenarios
-    newSeason.noMatches shouldBe expectedNoMatches
+    newSeason.confirmedInfo.noMatches shouldBe expectedNoMatches
   }
 
   "Match up ceremony" should "register a match up ceremony correctly when there is no information derived" in {
@@ -31,15 +31,16 @@ class MatchUpCeremonyTest extends FlatSpec with Matchers with AytoFixtures {
     )
 
     newSeason.scenarios shouldBe expectedScenarios
-    newSeason.noMatches shouldBe Set.empty
+    newSeason.confirmedInfo.noMatches shouldBe Set.empty
   }
 
   "Match up ceremony" should "register a match up ceremony correctly when perfect matches can be derived" in {
     val pairs = pairsFrom(("a", "w"), ("b", "x"), ("c", "y"), ("d", "z"))
-    val seasonBeforeMatchUp = fourPairSeason.copy(noMatches = pairsFrom(("a", "w"), ("d", "z")))
+    val seasonBeforeMatchUp = fourPairSeason
+      .copy(confirmedInfo = ConfirmedInfo(Set(), noMatches = pairsFrom(("a", "w"), ("d", "z"))))
     val newSeason = MatchUpCeremony.register(seasonBeforeMatchUp, Scenario(pairs), 2)
 
-    newSeason.perfectMatches shouldBe pairsFrom(("b", "x"), ("c", "y"))
-    newSeason.noMatches shouldBe pairsFrom(("a", "x"), ("c", "x"), ("d", "x"), ("b", "y"), ("b", "w"), ("b", "z"), ("a", "y"), ("d", "y"), ("c", "w"), ("c", "x"), ("c", "z"), ("d", "z"), ("a", "w"))
+    newSeason.confirmedInfo.perfectMatches shouldBe pairsFrom(("b", "x"), ("c", "y"))
+    newSeason.confirmedInfo.noMatches shouldBe pairsFrom(("a", "x"), ("c", "x"), ("d", "x"), ("b", "y"), ("b", "w"), ("b", "z"), ("a", "y"), ("d", "y"), ("c", "w"), ("c", "x"), ("c", "z"), ("d", "z"), ("a", "w"))
   }
 }

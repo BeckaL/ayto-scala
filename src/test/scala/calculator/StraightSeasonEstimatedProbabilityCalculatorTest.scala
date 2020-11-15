@@ -1,6 +1,6 @@
 package calculator
 
-import model.{AytoFixtures, Pairing, StraightSeason, IncompleteProbabilityRow}
+import model.{AytoFixtures, ConfirmedInfo, IncompleteProbabilityRow, Pairing, StraightSeason}
 import org.scalatest.{FlatSpec, Matchers}
 
 class StraightSeasonEstimatedProbabilityCalculatorTest extends FlatSpec with Matchers with AytoFixtures{
@@ -18,7 +18,9 @@ class StraightSeasonEstimatedProbabilityCalculatorTest extends FlatSpec with Mat
     val men = threePairSeason.contestants.men + "z"
     val perfectMatches = Set(Pairing("a", "x"))
     val noMatches = pairsFrom(("a", "y"), ("a", "w"), ("a", "z"), ("b", "x"), ("c", "x"), ("d", "x"), ("d", "w"))
-    val season = StraightSeason.from("TestSeason2", women, men).copy(noMatches = noMatches, perfectMatches = perfectMatches)
+    val season = StraightSeason
+      .from("TestSeason2", women, men)
+      .copy(confirmedInfo = ConfirmedInfo(noMatches = noMatches, perfectMatches = perfectMatches))
 
     val expectedProbabilities =  Set(
       IncompleteProbabilityRow("a", Map("w" -> Some(0.00), "x" -> Some(1.00), "y" -> Some(0.00), "z" -> Some(0.00))),

@@ -17,8 +17,8 @@ class TruthBoothTest extends FlatSpec with Matchers with AytoFixtures {
     val expectedNoMatches = pairsFrom(("a", "d"))
 
     newSeason.scenarios shouldBe expectedScenarios
-    newSeason.perfectMatches shouldBe expectedPerfectMatches
-    newSeason.noMatches shouldBe expectedNoMatches
+    newSeason.confirmedInfo.perfectMatches shouldBe expectedPerfectMatches
+    newSeason.confirmedInfo.noMatches shouldBe expectedNoMatches
     newSeason.contestants shouldBe threePairSeason.contestants
     newSeason.name shouldBe threePairSeason.name
     newSeason.weekNumber shouldBe threePairSeason.weekNumber
@@ -38,8 +38,8 @@ class TruthBoothTest extends FlatSpec with Matchers with AytoFixtures {
     val expectedNoMatches = pairsFrom(("a", "e"), ("a", "f"), ("b", "d"), ("c", "d"))
 
     newSeason.scenarios shouldBe expectedScenarios
-    newSeason.perfectMatches shouldBe expectedPerfectMatches
-    newSeason.noMatches shouldBe expectedNoMatches
+    newSeason.confirmedInfo.perfectMatches shouldBe expectedPerfectMatches
+    newSeason.confirmedInfo.noMatches shouldBe expectedNoMatches
     newSeason.contestants shouldBe threePairSeason.contestants
     newSeason.name shouldBe threePairSeason.name
     newSeason.weekNumber shouldBe threePairSeason.weekNumber

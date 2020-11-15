@@ -10,13 +10,11 @@ object ProbabilitiesReconciler {
       reconcile[Double](rows.map(_.asInstanceOf[ProbabilityResult[Double]]), season, completeConditions)
   }
 
-  private def reconcile[A](probabilities: Set[ProbabilityResult[A]], season: StraightSeason, conditions: (A => Boolean, A => Boolean)): StraightSeason = {
-    val (newMatches, newNoMatches) =  (
+  private def reconcile[A](probabilities: Set[ProbabilityResult[A]], season: StraightSeason, conditions: (A => Boolean, A => Boolean)): StraightSeason =
+    season.updateWithInfo(ConfirmedInfo(
       pairsWhereProbabilityIs(probabilities, conditions._1),
       pairsWhereProbabilityIs(probabilities, conditions._2)
-    )
-    season.updateWithInfo(newMatches, newNoMatches)
-  }
+    ))
 
   private def pairsWhereProbabilityIs[A](probabilities: Set[ProbabilityResult[A]], condition: A => Boolean) =
     probabilities.flatMap(p => p.probabilitiesForMen.collect{case (man, prob) if condition(prob) => man}.map(m => Pairing(p.woman, m)))

@@ -1,35 +1,32 @@
 package events
 
-import model.{Pairing, Scenario, StraightSeason}
+import model.{ConfirmedInfo, Pairing, Scenario, StraightSeason}
 
 object MatchUpCeremony {
-  def register(season: StraightSeason, guess: Scenario, numberCorrect: Int): StraightSeason = {
-    val unknownPairings = guess
-      .pairs
-      .filter(p => !season.perfectMatches.contains(p) && !season.noMatches.contains(p))
-    val newPerfectMatches = newMatches(season, guess, numberCorrect, unknownPairings)
+  def register(season: StraightSeason, guess: Scenario, numberCorrect: Int): StraightSeason =
     season
-      .copy(scenarios = newScenarios(season, guess, numberCorrect))
-      .updateWithInfo(newPerfectMatches, newNoMatches(season, guess, numberCorrect, unknownPairings, newPerfectMatches))
+      .copy(scenarios = season.scenarios.filter(s => s.numberMatching(guess) == numberCorrect))
+      .updateWithInfo(newConfirmedInfo(season, guess, numberCorrect))
+
+
+  private def newConfirmedInfo(season: StraightSeason, guess: Scenario, numberCorrect: Int): ConfirmedInfo = {
+    val unknownPairings = unknownPairingsInGuess(guess, season)
+    val allUnknownsAreNoMatches = numberCorrect - season.confirmedInfo.perfectMatches.count(guess.contains) == 0
+    val allUnknownsAreMatches = numberCorrect - season.confirmedInfo.perfectMatches.size == unknownPairings.size
+
+    if (allUnknownsAreNoMatches) { ConfirmedInfo(Set(), unknownPairings)
+    }
+    else if (allUnknownsAreMatches) {
+      ConfirmedInfo(unknownPairings, newNoMatchesFromNewMatches(unknownPairings, season))
+    } else
+      ConfirmedInfo.empty
   }
 
-  private def newScenarios(season: StraightSeason, guess: Scenario, numberCorrect: Int): Set[Scenario] =
-    season.scenarios.filter(s => s.numberMatching(guess) == numberCorrect)
-
-  private def newNoMatches(season: StraightSeason, guess: Scenario, numberCorrect: Int, unknownPairingsInGuess: Set[Pairing], newMatches: Set[Pairing]): Set[Pairing] = {
-     val noMatches = if (numberCorrect - season.perfectMatches.count(guess.contains) == 0)
-      unknownPairingsInGuess
-    else
-      Set[Pairing]()
-    noMatches | newNoMatchesFromNewMatches(newMatches, season)
-  }
-
-  private def newMatches(season: StraightSeason, guess: Scenario, numberCorrect: Int, unknownPairingsInGuess: Set[Pairing]): Set[Pairing] = {
-    if (numberCorrect - season.perfectMatches.size == unknownPairingsInGuess.size)
-      unknownPairingsInGuess
-    else
-      Set()
-  }
+  private def unknownPairingsInGuess(guess: Scenario, season: StraightSeason): Set[Pairing] = guess
+    .pairs
+    .filter(p => !season.confirmedInfo.perfectMatches.contains(p) &&
+      !season.confirmedInfo.noMatches.contains(p)
+    )
 
   private def newNoMatchesFromNewMatches(newMatches: Set[Pairing], season: StraightSeason): Set[Pairing] =
     newMatches.flatMap{case Pairing(woman, man) =>

@@ -14,8 +14,8 @@ object StraightSeasonProbabilityCalculator {
       }.toSet
 
   private def calculateProbabilityForPair(pair: Pairing, season: StraightSeason): Double = pair match {
-    case _ if season.perfectMatches.contains(pair) => 1.00
-    case _ if season.noMatches.contains(pair) => 0.00
+    case _ if season.confirmedInfo.perfectMatches.contains(pair) => 1.00
+    case _ if season.confirmedInfo.noMatches.contains(pair) => 0.00
     case _ if season.hasNoConfirmedInformation => to2decimalPlaces(1.0 / season.contestants.women.size)
     case _ => countScenariosForPair(pair, season.scenarios) / season.scenarios.size
   }

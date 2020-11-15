@@ -11,7 +11,7 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
       Pairing("c", "d"), Pairing("c", "e"), Pairing("c", "f")
     )
 
-    threePairSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, Set.empty, Set.empty)
+    threePairSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, ConfirmedInfo(Set.empty, Set.empty))
     threePairSeason.initialNumberOfProbabilities shouldBe 6
   }
 
@@ -19,9 +19,9 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
     val information = pairsFrom(("a", "d"))
     val data = Table(
       ("season", "expectedHasNoConfirmedInformation"),
-      (threePairSeason.copy(noMatches =  information), false),
-      (threePairSeason.copy(perfectMatches =  information), false),
-      (threePairSeason.copy(noMatches =  information, perfectMatches = pairsFrom(("b", "d"))), false),
+      (threePairSeason.copy(confirmedInfo = ConfirmedInfo(Set.empty, noMatches =  information)), false),
+      (threePairSeason.copy(confirmedInfo = ConfirmedInfo(perfectMatches =  information, Set.empty)), false),
+      (threePairSeason.copy(confirmedInfo = ConfirmedInfo(noMatches =  information, perfectMatches = pairsFrom(("b", "d")))), false),
       (threePairSeason, true)
     )
 
@@ -33,9 +33,9 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
   it should "be able to say whether or not it is solved" in {
     val data = Table(
       ("season", "expectedHasNoConfirmedInformation"),
-      (threePairSeason.copy(perfectMatches = Set()), false),
-      (threePairSeason.copy(perfectMatches = scenario2.pairs), true),
-      (threePairSeason.copy(perfectMatches = scenario2.pairs.take(2)), false)
+      (threePairSeason.copy(confirmedInfo = ConfirmedInfo(perfectMatches = Set(), Set())), false),
+      (threePairSeason.copy(confirmedInfo = ConfirmedInfo(perfectMatches = scenario2.pairs, Set())), true),
+      (threePairSeason.copy(confirmedInfo = ConfirmedInfo(perfectMatches = scenario2.pairs.take(2), Set())), false)
     )
 
     forAll(data) { case(season, expectedIsSolved) =>
@@ -56,22 +56,22 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
 
     val data = Table(
       ("season", "newInfo", "expectedInfo"),
-      (threePairSeason.copy(noMatches = emptyInfo), (emptyInfo, noMatchInfo1), (emptyInfo, noMatchInfo1)),
-      (threePairSeason.copy(noMatches = noMatchInfo1), (emptyInfo, noMatchInfo2), (emptyInfo, noMatchInfo3)),
-      (threePairSeason.copy(noMatches = noMatchInfo3), (emptyInfo, noMatchInfo3), (emptyInfo, noMatchInfo3)),
-      (threePairSeason.copy(perfectMatches = emptyInfo), (perfectMatchInfo1, emptyInfo), (perfectMatchInfo1, emptyInfo)),
-      (threePairSeason.copy(perfectMatches = perfectMatchInfo1), (perfectMatchInfo2, emptyInfo), (perfectMatchInfo3, emptyInfo)),
-      (threePairSeason.copy(perfectMatches = perfectMatchInfo3), (perfectMatchInfo3, emptyInfo), (perfectMatchInfo3, emptyInfo)),
+      (ConfirmedInfo(perfectMatches = Set.empty, noMatches = emptyInfo), (emptyInfo, noMatchInfo1), (emptyInfo, noMatchInfo1)),
+      (ConfirmedInfo(perfectMatches = Set.empty, noMatches = noMatchInfo1), (emptyInfo, noMatchInfo2), (emptyInfo, noMatchInfo3)),
+      (ConfirmedInfo(perfectMatches = Set.empty, noMatches = noMatchInfo3), (emptyInfo, noMatchInfo3), (emptyInfo, noMatchInfo3)),
+      (ConfirmedInfo(perfectMatches = emptyInfo, noMatches = Set.empty), (perfectMatchInfo1, emptyInfo), (perfectMatchInfo1, emptyInfo)),
+      (ConfirmedInfo(perfectMatches = perfectMatchInfo1, noMatches = Set.empty), (perfectMatchInfo2, emptyInfo), (perfectMatchInfo3, emptyInfo)),
+      (ConfirmedInfo(perfectMatches = perfectMatchInfo3, noMatches = Set.empty), (perfectMatchInfo3, emptyInfo), (perfectMatchInfo3, emptyInfo)),
     )
 
-    forAll(data) { case(season, newInfo, expectedInfo) =>
-      val updatedSeason = season.updateWithInfo(newInfo._1, newInfo._2)
+    forAll(data) { case(confirmedInfo, newInfo, expectedInfo) =>
+      val season = threePairSeason.copy(confirmedInfo = confirmedInfo)
+      val updatedSeason = season.updateWithInfo(ConfirmedInfo(newInfo._1, newInfo._2))
       updatedSeason.name shouldBe season.name
       updatedSeason.contestants shouldBe season.contestants
       updatedSeason.possiblePairings shouldBe season.possiblePairings
       updatedSeason.scenarios shouldBe season.scenarios
-      updatedSeason.perfectMatches shouldBe expectedInfo._1
-      updatedSeason.noMatches shouldBe expectedInfo._2
+      updatedSeason.confirmedInfo shouldBe ConfirmedInfo(expectedInfo._1, expectedInfo._2)
     }
   }
 }

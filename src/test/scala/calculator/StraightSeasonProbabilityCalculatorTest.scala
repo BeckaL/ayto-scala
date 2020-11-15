@@ -1,13 +1,14 @@
 package calculator
 
-import model.{AytoFixtures, Pairing, CompleteProbabilityRow, Scenario, StraightSeason}
+import model.{AytoFixtures, CompleteProbabilityRow, ConfirmedInfo, Pairing, Scenario, StraightSeason}
 import org.scalatest.{FlatSpec, Matchers}
 
 class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers with AytoFixtures {
   "StraightSeasonProbabilityCalculator" should "calculate probabilities from existing confirmed matches and no matches" in {
     val confirmedMatches = pairsFrom(("a", "d"), ("b", "e"), ("c", "f"))
     val confirmedNoMatches = pairsFrom(("a", "e"), ("a", "f"), ("b", "d"), ("b", "f"), ("c", "d"), ("c", "e"))
-    val season = threePairSeason.copy(perfectMatches = confirmedMatches, noMatches = confirmedNoMatches)
+    val season = threePairSeason
+      .copy(confirmedInfo = ConfirmedInfo(perfectMatches = confirmedMatches, noMatches = confirmedNoMatches))
 
     val expectedProbabilities = Set(
       CompleteProbabilityRow("a", Map("d" -> 1.00, "e" -> 0.00, "f" -> 0.00)),
@@ -41,7 +42,11 @@ class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers wit
       CompleteProbabilityRow("b", Map("d" -> 0.25, "e" -> 0.5, "f" -> 0.25)),
       CompleteProbabilityRow("c", Map("d" -> 0.25, "e" -> 0.5, "f" -> 0.25)))
 
-    val season = threePairSeason.copy(scenarios = scenarios, noMatches = confirmedNoMatches, weekNumber = 1)
+    val season = threePairSeason
+      .copy(scenarios = scenarios,
+        confirmedInfo = threePairSeason.confirmedInfo.copy(noMatches = confirmedNoMatches),
+        weekNumber = 1
+      )
     StraightSeasonProbabilityCalculator.calculate(season) shouldBe expectedProbabilities
   }
 }

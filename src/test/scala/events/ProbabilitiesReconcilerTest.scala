@@ -13,8 +13,8 @@ class ProbabilitiesReconcilerTest extends FlatSpec with Matchers with AytoFixtur
 
     val updatedSeason = ProbabilitiesReconciler.reconcile(table,threePairSeason)
 
-    updatedSeason.perfectMatches shouldBe pairsFrom(("a", "d"))
-    updatedSeason.noMatches  shouldBe pairsFrom(("b", "d"), ("c", "d"), ("a", "e"), ("a", "f"))
+    updatedSeason.confirmedInfo.perfectMatches shouldBe pairsFrom(("a", "d"))
+    updatedSeason.confirmedInfo.noMatches  shouldBe pairsFrom(("b", "d"), ("c", "d"), ("a", "e"), ("a", "f"))
   }
 
   it should "get no matches and matches from uncertain probability table" in {
@@ -26,8 +26,8 @@ class ProbabilitiesReconcilerTest extends FlatSpec with Matchers with AytoFixtur
 
     val updatedSeason = ProbabilitiesReconciler.reconcile(table, threePairSeason)
 
-    updatedSeason.perfectMatches shouldBe pairsFrom(("a", "d"))
-    updatedSeason.noMatches  shouldBe pairsFrom(("b", "d"), ("c", "d"), ("a", "e"), ("a", "f"))
+    updatedSeason.confirmedInfo.perfectMatches shouldBe pairsFrom(("a", "d"))
+    updatedSeason.confirmedInfo.noMatches  shouldBe pairsFrom(("b", "d"), ("c", "d"), ("a", "e"), ("a", "f"))
   }
 
 
