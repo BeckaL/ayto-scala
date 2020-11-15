@@ -1,9 +1,9 @@
 package events
 
-import model.{Pairing, ComleteProbabilityForWoman, ProbabilityResult, StraightSeason, IncompleteProbabilityForWoman}
+import model.{Pairing, CompleteProbabilityForWoman, ProbabilityResult, StraightSeason, IncompleteProbabilityForWoman}
 
 object ProbabilitiesReconciler {
-  def reconcileComplete(probabilities: Set[ComleteProbabilityForWoman], season: StraightSeason) = {
+  def reconcileComplete(probabilities: Set[CompleteProbabilityForWoman], season: StraightSeason) = {
     val (newMatches, newNoMatches) =  (
       pairsWhereCompleteProbabilityIs(probabilities, (x: Double) => x == 1.0),
       pairsWhereCompleteProbabilityIs(probabilities, (x: Double) => x == 0.0)
@@ -19,7 +19,7 @@ object ProbabilitiesReconciler {
     season.copy(perfectMatches = season.perfectMatches | newMatches, noMatches = season.noMatches | newNoMatches)
   }
 
-  private def pairsWhereCompleteProbabilityIs(probabilities: Set[ComleteProbabilityForWoman], condition: Double => Boolean) =
+  private def pairsWhereCompleteProbabilityIs(probabilities: Set[CompleteProbabilityForWoman], condition: Double => Boolean) =
     probabilities.flatMap(p => collectProbabilitiesWhere(condition, p.probabilitiesForMen).map(m => Pairing(p.woman, m)))
 
   private def pairsWhereIncompleteProbabilityIs(probabilities: Set[IncompleteProbabilityForWoman], condition: Option[Double] => Boolean) =

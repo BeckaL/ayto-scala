@@ -1,12 +1,12 @@
 package calculator
 
-import model.{Pairing, ComleteProbabilityForWoman, Scenario, StraightSeason}
+import model.{Pairing, CompleteProbabilityForWoman, Scenario, StraightSeason}
 
 object StraightSeasonProbabilityCalculator {
-  def calculate(season: StraightSeason): Set[ComleteProbabilityForWoman] =
+  def calculate(season: StraightSeason): Set[CompleteProbabilityForWoman] =
     season.possiblePairings.groupBy(_.woman)
       .map{ case woman -> pairings =>
-        ComleteProbabilityForWoman(woman,
+        CompleteProbabilityForWoman(woman,
           pairings.map(p =>
             p.man -> calculateProbabilityForPair(p, season)
           ).toMap
