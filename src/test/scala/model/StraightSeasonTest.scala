@@ -11,18 +11,18 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
       Pairing("c", "d"), Pairing("c", "e"), Pairing("c", "f")
     )
 
-    basicSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, Set.empty, Set.empty)
-    basicSeason.initialNumberOfProbabilities shouldBe 6
+    threePairSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, Set.empty, Set.empty)
+    threePairSeason.initialNumberOfProbabilities shouldBe 6
   }
 
   it should "be able to say whether or not it has any confirmed information" in {
     val information = pairsFrom(("a", "d"))
     val data = Table(
       ("season", "expectedHasNoConfirmedInformation"),
-      (basicSeason.copy(noMatches =  information), false),
-      (basicSeason.copy(perfectMatches =  information), false),
-      (basicSeason.copy(noMatches =  information, perfectMatches = pairsFrom(("b", "d"))), false),
-      (basicSeason, true)
+      (threePairSeason.copy(noMatches =  information), false),
+      (threePairSeason.copy(perfectMatches =  information), false),
+      (threePairSeason.copy(noMatches =  information, perfectMatches = pairsFrom(("b", "d"))), false),
+      (threePairSeason, true)
     )
 
     forAll(data) { case(season, expectedHasNoConfirmedInformation) =>

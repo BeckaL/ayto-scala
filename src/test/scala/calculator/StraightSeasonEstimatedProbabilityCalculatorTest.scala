@@ -10,12 +10,12 @@ class StraightSeasonEstimatedProbabilityCalculatorTest extends FlatSpec with Mat
       UncertainProbabilityForWoman("b", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))),
       UncertainProbabilityForWoman("c", Map("w" -> Some(0.33), "x" -> Some(0.33), "y" -> Some(0.33))))
 
-    StraightSeasonEstimatedProbabilityCalculator.calculate(basicSeason) shouldBe expectedProbabilities
+    StraightSeasonEstimatedProbabilityCalculator.calculate(threePairSeason) shouldBe expectedProbabilities
   }
 
   it should "estimate probabilities when there is some confirmed information" in {
-    val women = basicSeason.contestants.women + "d"
-    val men = basicSeason.contestants.men + "z"
+    val women = threePairSeason.contestants.women + "d"
+    val men = threePairSeason.contestants.men + "z"
     val perfectMatches = Set(Pairing("a", "x"))
     val noMatches = pairsFrom(("a", "y"), ("a", "w"), ("a", "z"), ("b", "x"), ("c", "x"), ("d", "x"), ("d", "w"))
     val season = StraightSeason.from("TestSeason2", women, men).copy(noMatches = noMatches, perfectMatches = perfectMatches)
@@ -29,5 +29,5 @@ class StraightSeasonEstimatedProbabilityCalculatorTest extends FlatSpec with Mat
     StraightSeasonEstimatedProbabilityCalculator.calculate(season) shouldBe expectedProbabilities
   }
 
-  override val basicSeason = StraightSeason.from("testSeason", Set("a", "b", "c"), Set("w", "x", "y"))
+  override val threePairSeason = StraightSeason.from("testSeason", Set("a", "b", "c"), Set("w", "x", "y"))
 }

@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class TruthBoothTest extends FlatSpec with Matchers with AytoFixtures {
   "Truth booth" should "register a no match truth booth correctly" in {
-    val newSeason = TruthBooth.register(basicSeason, Pairing("a", "d"), false)
+    val newSeason = TruthBooth.register(threePairSeason, Pairing("a", "d"), false)
 
     val expectedScenarios =
       Set(Scenario.from(List(("a", "e"),("b", "d"),("c", "f"))),
@@ -19,14 +19,14 @@ class TruthBoothTest extends FlatSpec with Matchers with AytoFixtures {
     newSeason.scenarios shouldBe expectedScenarios
     newSeason.perfectMatches shouldBe expectedPerfectMatches
     newSeason.noMatches shouldBe expectedNoMatches
-    newSeason.contestants shouldBe basicSeason.contestants
-    newSeason.name shouldBe basicSeason.name
-    newSeason.weekNumber shouldBe basicSeason.weekNumber
+    newSeason.contestants shouldBe threePairSeason.contestants
+    newSeason.name shouldBe threePairSeason.name
+    newSeason.weekNumber shouldBe threePairSeason.weekNumber
   }
 
 
   it should "register a perfect match truth booth correctly" in {
-    val newSeason = TruthBooth.register(basicSeason, Pairing("a", "d"), true)
+    val newSeason = TruthBooth.register(threePairSeason, Pairing("a", "d"), true)
 
     val expectedScenarios =
       Set(
@@ -40,8 +40,8 @@ class TruthBoothTest extends FlatSpec with Matchers with AytoFixtures {
     newSeason.scenarios shouldBe expectedScenarios
     newSeason.perfectMatches shouldBe expectedPerfectMatches
     newSeason.noMatches shouldBe expectedNoMatches
-    newSeason.contestants shouldBe basicSeason.contestants
-    newSeason.name shouldBe basicSeason.name
-    newSeason.weekNumber shouldBe basicSeason.weekNumber
+    newSeason.contestants shouldBe threePairSeason.contestants
+    newSeason.name shouldBe threePairSeason.name
+    newSeason.weekNumber shouldBe threePairSeason.weekNumber
   }
 }
