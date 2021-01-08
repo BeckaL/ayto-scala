@@ -1,6 +1,6 @@
 package calculator
 
-import model.{AytoFixtures, CompleteProbabilityRow, CompleteProbabilityTable, ConfirmedInfo, Pairing, Scenario, StraightSeason}
+import model.{AytoFixtures, CompleteProbabilityRow, CompleteProbabilityTable, ConfirmedInfo, Pairing, Scenario, InMemoryStraightSeason}
 import org.scalatest.{FlatSpec, Matchers}
 
 class StraightSeasonProbabilityCalculatorTest extends FlatSpec with Matchers with AytoFixtures {

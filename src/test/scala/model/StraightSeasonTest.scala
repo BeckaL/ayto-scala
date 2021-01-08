@@ -11,7 +11,7 @@ class StraightSeasonTest extends FlatSpec with Matchers with AytoFixtures with T
       Pairing("c", "d"), Pairing("c", "e"), Pairing("c", "f")
     )
 
-    threePairSeason shouldBe StraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, ConfirmedInfo(Set.empty, Set.empty))
+    threePairSeason shouldBe InMemoryStraightSeason(seasonName, Contestants(women, men), 0, allScenarios, expectedPossiblePairings, ConfirmedInfo(Set.empty, Set.empty))
     threePairSeason.initialNumberOfProbabilities shouldBe 6
   }
 

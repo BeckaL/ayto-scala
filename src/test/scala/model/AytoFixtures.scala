@@ -4,7 +4,7 @@ trait AytoFixtures {
   val women = Set("a", "b", "c")
   val men = Set("d", "e", "f")
   val seasonName = "TestSeason"
-  val threePairSeason = StraightSeason.from(seasonName, women, men)
+  val threePairSeason = InMemoryStraightSeason.from(seasonName, women, men)
 
   def pairsFrom(pairs: (String, String)*) = pairs.map(p => Pairing(p._1, p._2)).toSet
 
@@ -16,5 +16,5 @@ trait AytoFixtures {
   val scenario6 = Scenario.from(List(("a", "f"), ("b", "e"), ("c", "d")))
 
   val allScenarios = Set(scenario1, scenario2, scenario3, scenario4, scenario5, scenario6)
-  val fourPairSeason = StraightSeason.from(seasonName, Set("a", "b", "c", "d"), Set("w", "x", "y", "z"))
+  val fourPairSeason = InMemoryStraightSeason.from(seasonName, Set("a", "b", "c", "d"), Set("w", "x", "y", "z"))
 }

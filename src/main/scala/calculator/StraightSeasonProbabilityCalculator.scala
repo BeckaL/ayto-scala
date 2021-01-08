@@ -1,9 +1,9 @@
 package calculator
 
-import model.{CompleteProbabilityRow, CompleteProbabilityTable, Pairing, ProbabilityTable, Scenario, StraightSeason}
+import model.{CompleteProbabilityRow, CompleteProbabilityTable, Pairing, ProbabilityTable, Scenario, InMemoryStraightSeason}
 
 object StraightSeasonProbabilityCalculator {
-  def calculate(season: StraightSeason): ProbabilityTable =
+  def calculate(season: InMemoryStraightSeason): ProbabilityTable =
     CompleteProbabilityTable(season.possiblePairings.groupBy(_.woman)
       .map{ case woman -> pairings =>
         CompleteProbabilityRow(woman,
@@ -13,7 +13,7 @@ object StraightSeasonProbabilityCalculator {
         )
       }.toSet)
 
-  private def calculateProbabilityForPair(pair: Pairing, season: StraightSeason): Double = pair match {
+  private def calculateProbabilityForPair(pair: Pairing, season: InMemoryStraightSeason): Double = pair match {
     case _ if season.confirmedInfo.perfectMatches.contains(pair) => 1.00
     case _ if season.confirmedInfo.noMatches.contains(pair) => 0.00
     case _ if season.hasNoConfirmedInformation => to2decimalPlaces(1.0 / season.contestants.women.size)

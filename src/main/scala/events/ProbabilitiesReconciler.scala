@@ -3,14 +3,14 @@ package events
 import model._
 
 object ProbabilitiesReconciler {
-  def reconcile(table: ProbabilityTable, season: StraightSeason): StraightSeason = table match {
+  def reconcile(table: ProbabilityTable, season: InMemoryStraightSeason): InMemoryStraightSeason = table match {
     case IncompleteProbabilityTable(rows) =>
       reconcile[Option[Double]](rows.map(_.asInstanceOf[ProbabilityResult[Option[Double]]]), season, incompleteConditions)
     case CompleteProbabilityTable(rows) =>
       reconcile[Double](rows.map(_.asInstanceOf[ProbabilityResult[Double]]), season, completeConditions)
   }
 
-  private def reconcile[A](probabilities: Set[ProbabilityResult[A]], season: StraightSeason, conditions: (A => Boolean, A => Boolean)): StraightSeason =
+  private def reconcile[A](probabilities: Set[ProbabilityResult[A]], season: InMemoryStraightSeason, conditions: (A => Boolean, A => Boolean)): InMemoryStraightSeason =
     season.updateWithInfo(ConfirmedInfo(
       pairsWhereProbabilityIs(probabilities, conditions._1),
       pairsWhereProbabilityIs(probabilities, conditions._2)
